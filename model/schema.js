@@ -1,80 +1,78 @@
 var mongoose = require('mongoose')
-var Sequence = require('./sequence').Sequence
-var Usergenerate = require('./sequence').Usergenerate
+var topicGenerate = require('./sequence').TopicGenerate
+var messageGenerate = require('./sequence').MessageGenerate
+var commentGenerate = require('./sequence').CommentGenerate
 var Schema = mongoose.Schema
-mongoose.connect('mongodb://localhost/organization')
-var communitySchema = new Schema({
-    community_name: {
+mongoose.connect('mongodb://localhost/slj')
+
+var commentSchema = new Schema({
+  comment_id: {
+    type: Number,
+    index: {unique: true},
+    required: true
+  },
+  comment_content: {
+    type: String,
+    required: true
+  },
+  comment_user: {
+    type: Number,
+    required: true
+  },
+  comment_date: {
+    type: Date,
+    required: true
+  },
+  comment_category: {
+    type: Number,
+    required: true
+  },
+  parent_id: {
+    type: Number,
+    required: true
+  }
+}, {versionKey: false})
+
+var topicSchema = new Schema({
+    topic_name: {
       type: String,
       reuqired: true,
       unique: true
     },
-    community_id: {
+    topic_id: {
       type: Number,
       index: {unique: true},
       reuqired: true
     },
-    community_logo: {
-      type: String,
-      reuqired: true,
-      default : 'http://7xrp7o.com1.z0.glb.clouddn.com/sjfblog.png'
-    },
-    community_desc: {
-      type: String,
-      required: true
-    },
-    community_QQ: {
-      type: String,
-      required: false
-    },
-    community_wechat: {
-      type: String,
-      required: false
-    },
-    community_weibo: {
-      type: String,
-      required: false
-    },
-    community_phone: {
-      type: String,
-      required: false
-    },
-    head: {
-      type: String,
-      required: true
-    },
-    category: {
-      type: Number,
-      required: true
-    },
-    department: [{
-      name: {
-        type: String,
-        required: true
-      },
-      desc: {
-        type: String,
-        required: true
-      }
-    }],
+    comments: [commentSchema],
     created: {
       type: Date,
-      default: Date.now
+      required: true
     }
   }, {versionKey: false})
+
+var messageSchema = new Schema({
+    message_name: {
+      type: String,
+      reuqired: true,
+      unique: true
+    },
+    message_id: {
+      type: Number,
+      index: {unique: true},
+      reuqired: true
+    },
+    comments: [commentSchema],
+    created: {
+      type: Date,
+      required: true
+    }
+  }, {versionKey: false})
+
 var userSchema = new Schema({
     username: {
       type: String,
       required: true,
-      unique: true
-    },
-    student_id: {
-      type: String,
-      required: true
-    },
-    mobile: {
-      type: 'String',
-      requreid: true,
       unique: true
     },
     birthday: {
@@ -84,7 +82,7 @@ var userSchema = new Schema({
     photo: {
       type: String,
       required: true,
-      default: 'http://7xrp7o.com1.z0.glb.clouddn.com/sjfblog.png'
+      default: 'http://7xrp7o.com1.z0.glb.clouddn.com/IMG_20160928_142420.jpg'
     },
     user_id: {
       type: Number,
@@ -95,34 +93,18 @@ var userSchema = new Schema({
       type: String,
       required: true,
       default: '123456'
-    },
-    community: {
-      community_id: {
-        type: String,
-        required: true
-      },
-      department: {
-        name: {
-          type: String,
-          required: true
-        },
-        jobposition: {
-          type: String,
-          required: true
-        }
-      }
     }
   }, {versionKey: false})
 
-communitySchema.pre('save', function(next) {
+topicSchema.pre('save', function(next) {
   var self = this
-  console.log('self.community_id is ' + self.community_id)
+  console.log('self.topic_id is ' + self.topic_id)
   if (this.isNew) {
-    Sequence.increase('Community', function(err, res) {
+    topicGenerate.increase('Topic', function(err, res) {
       if (err) {
         console.log('err is' + JSON.stringify(err))
       } else{
-        self.community_id = res.value.next
+        self.topic_id = res.value.next
         next()
       }
     })
@@ -131,14 +113,30 @@ communitySchema.pre('save', function(next) {
   }
 })
 
-userSchema.pre('save', function(next) {
+messageSchema.pre('save', function(next) {
   var self = this
   if (this.isNew) {
-    Usergenerate.increase('User', function(err, result) {
+    messageGenerate.increase('Message', function(err, result) {
       if (err) {
         console.log('err is' + JSON.stringify(err))
       } else{
-        self.user_id = result.value.next
+        self.message_id = result.value.next
+        next()
+      }
+    })
+  } else {
+    next()
+  }
+})
+
+commentSchema.pre('save', function(next) {
+  var self = this
+  if (this.isNew) {
+    commentGenerate.increase('Comment', function(err, result) {
+      if (err) {
+        console.log('err is' + JSON.stringify(err))
+      } else{
+        self.comment_id = result.value.next
         next()
       }
     })
@@ -148,6 +146,8 @@ userSchema.pre('save', function(next) {
 })
 
 exports.model = {
-  Community: mongoose.model('Community', communitySchema),
-  User: mongoose.model('User', userSchema)
+  Topic: mongoose.model('Topic', topicSchema),
+  User: mongoose.model('User', userSchema),
+  Message: mongoose.model('Message', messageSchema),
+  Comment: mongoose.model('Comment', commentSchema)
 }

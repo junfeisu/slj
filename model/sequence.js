@@ -2,7 +2,7 @@ var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 var models = {}
 
-SequenceSchema = new Schema({
+TopicGenerateSchema = new Schema({
   _id: String,
   next: {
     type: Number,
@@ -10,7 +10,15 @@ SequenceSchema = new Schema({
   }
 })
 
-UsergenerateSchema = new Schema({
+MessageGenerateSchema = new Schema({
+  _id: String,
+  next: {
+    type: Number,
+    default: 1
+  }
+})
+
+CommentGenerateSchema = new Schema({
   _id: String,
   next: {
     type: Number,
@@ -27,11 +35,14 @@ function increase (schemaName, callback) {
     )
 }
 
-SequenceSchema.statics.increase = increase
+TopicGenerateSchema.statics.increase = increase
 
-UsergenerateSchema.statics.increase = increase
+MessageGenerateSchema.statics.increase = increase
 
-models.Sequence = mongoose.model('Sequence', SequenceSchema)
-models.Usergenerate = mongoose.model('Usergenerate', UsergenerateSchema)
+CommentGenerateSchema.statics.increase = increase
+
+models.TopicGenerate = mongoose.model('TopicGenerate', TopicGenerateSchema)
+models.MessageGenerate = mongoose.model('MessageGenerate', MessageGenerateSchema)
+models.CommentGenerate = mongoose.model('CommentGenerate', CommentGenerateSchema)
 
 module.exports = models

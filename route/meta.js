@@ -10,15 +10,22 @@ route.get('/', function(req, res) {
             "header": "Authorization",
             "refresh": true
         },
-        "community": {
-            "get_allcommunity": {},
-            "post_community": {},
-            "get_community": {}
+        "topic": {
+            "get_alltopic": {},
+            "post_topic": {},
+            "get_topic": {}
+        },
+        "message": {
+            "get_allmessage": {},
+            "post_message": {},
+            "get_message": {}
+        },
+        "comment": {
+            "get_comment": {},
+            "post_comment": {},
         },
         "user": {
             "get": {},
-            "get_user": {},
-            "post_user": {},
             "post_login": {},
             "put_password": {}
         }

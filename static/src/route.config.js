@@ -1,14 +1,45 @@
 import index from 'components/index/index.vue'
 
+import login from 'components/login/login.vue'
+
+import topic from 'components/topic/topic.vue'
+import topicList from 'components/topic/list.vue'
+import topicDetail from 'components/topic/detail.vue'
+import postTopic from 'components/topic/post.vue'
+
 export default function config (router) {
   router.map({
     '/': {
       name: 'index',
       component: index,
-      docTitle: '社团组织'
+      docTitle: '首页'
+    },
+    '/login': {
+      name: 'login',
+      component: login,
+      docTitle: '登录'
+    },
+    'topic': {
+      name: 'topic',
+      component: topic,
+      docTitle: '话题',
+      subRoutes: {
+        '/': {
+          name: 'topicList',
+          component: topicList
+        },
+        '/detail': {
+          name: 'topicDetail',
+          component: topicDetail
+        },
+        'post:': {
+          name: 'postTopic',
+          component: postTopic
+        }
+      }
     }
   })
   router.afterEach(function (transition) {
-    document.title = transition.to.docTitle || 'organization'
+    document.title = transition.to.docTitle || 'slj'
   })
 }

@@ -8,43 +8,39 @@ route.get('/', function (req, res) {
 })
 
 // 通过成员id或者社团部门获取成员
-route.get('/user', function (req, res) {
-  var message = {
-    user_id: 1,
-    community: {}
-  }
-  if (typeof req.query.user_id === 'undefined') {
-    message.community = req.query.community
-    delete message.user_id
-  } else if (typeof req.query.community === 'undefined') {
-    console.log('123')
-    message.user_id = +req.query.user_id
-    delete message.community
-  }
-  console.log('the message is ' + JSON.stringify(message))
-  mongo.search(model.User, message, function (err, result) {
-    err ? res.status(500).json(err) : res.json(result)
-  })
-})
+// route.get('/user', function (req, res) {
+//   var message = {
+//     user_id: 1,
+//     community: {}
+//   }
+//   if (typeof req.query.user_id === 'undefined') {
+//     message.community = req.query.community
+//     delete message.user_id
+//   } else if (typeof req.query.community === 'undefined') {
+//     message.user_id = +req.query.user_id
+//     delete message.community
+//   }
+//   console.log('the message is ' + JSON.stringify(message))
+//   mongo.search(model.User, message, function (err, result) {
+//     err ? res.status(500).json(err) : res.json(result)
+//   })
+// })
 
-// 添加成员
-route.post('/user', function (req, res) {
-  mongo.add(new model['User'](req.body), function (err, result) {
-    err ? res.status(500).json(err) : res.json({message: "添加成员成功",user: result})
-  })
-})
+// // 添加成员
+// route.post('/user', function (req, res) {
+//   mongo.add(new model['User'](req.body), function (err, result) {
+//     err ? res.status(500).json(err) : res.json({message: "添加成员成功",user: result})
+//   })
+// })
 
 // 成员登录
 route.post('/login', function (req, res) {
-  mongo.search(model.User, {user_id: req.body.user_id}, function (err, result) {
+  console.log(req.body)
+  mongo.search(model.User, req.body, function (err, result) {
     if (err) {
       res.status(500).json(err)
     } else {
-      if (result.length === 1) {
-        req.body.password === result[0].student_id.substring(4, 10) ? res.json({msg: '登录成功', user: result[0]}) : res.status(403).json({msg: '用户名或者密码错误'})
-      } else {
-        res.status(404).json({msg: '不存在这个用户'})
-      }
+      result.length === 0 ? res.status(403).json({msg: '用户名或者密码错误', user: null}) : res.json({msg: '登录成功', user: result[0]})
     }
   })
 })

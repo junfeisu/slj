@@ -24,7 +24,7 @@
       }
     },
     ready () {
-      this.abc()
+      // this.abc()
     }
   }
 </script>

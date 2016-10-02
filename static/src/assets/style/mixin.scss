@@ -1,0 +1,17 @@
+@mixin fullscreen {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+}
+
+@mixin background-color-set($normal, $hover, $active) {
+  background-color: $normal;
+  &:hover {
+    background-color: $hover;
+  }
+  &:active {
+    background-color: $active;
+  }
+}
