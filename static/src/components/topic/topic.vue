@@ -5,7 +5,12 @@
 </template>
 
 <style lang="scss">
-  // @import './../as'
+  .topic {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
 </style>
 
 <script>

@@ -8,7 +8,7 @@ mongoose.connect('mongodb://localhost/slj')
 var commentSchema = new Schema({
   comment_id: {
     type: Number,
-    index: {unique: true},
+    unique: true,
     required: true
   },
   comment_content: {
@@ -16,7 +16,7 @@ var commentSchema = new Schema({
     required: true
   },
   comment_user: {
-    type: Number,
+    type: String,
     required: true
   },
   comment_date: {
@@ -32,42 +32,6 @@ var commentSchema = new Schema({
     required: true
   }
 }, {versionKey: false})
-
-var topicSchema = new Schema({
-    topic_name: {
-      type: String,
-      reuqired: true,
-      unique: true
-    },
-    topic_id: {
-      type: Number,
-      index: {unique: true},
-      reuqired: true
-    },
-    comments: [commentSchema],
-    created: {
-      type: Date,
-      required: true
-    }
-  }, {versionKey: false})
-
-var messageSchema = new Schema({
-    message_name: {
-      type: String,
-      reuqired: true,
-      unique: true
-    },
-    message_id: {
-      type: Number,
-      index: {unique: true},
-      reuqired: true
-    },
-    comments: [commentSchema],
-    created: {
-      type: Date,
-      required: true
-    }
-  }, {versionKey: false})
 
 var userSchema = new Schema({
     username: {
@@ -87,7 +51,7 @@ var userSchema = new Schema({
     user_id: {
       type: Number,
       required: true,
-      index: {unique: true}
+      unique: true
     },
     password: {
       type: String,
@@ -96,14 +60,60 @@ var userSchema = new Schema({
     }
   }, {versionKey: false})
 
+var topicSchema = new Schema({
+    topic_name: {
+      type: String,
+      reuqired: true,
+      unique: true
+    },
+    topic_id: {
+      type: Number,
+      unique: true,
+      required: true
+    },
+    post_user: {
+      type: String,
+      required: true
+    },
+    comments: [commentSchema],
+    user: userSchema,
+    created: {
+      type: Date,
+      required: true,
+      default: Date.now()
+    }
+  }, {versionKey: false})
+
+var messageSchema = new Schema({
+    message_name: {
+      type: String,
+      reuqired: true,
+      unique: true
+    },
+    message_id: {
+      type: Number,
+      required: true
+    },
+    comments: [commentSchema],
+    post_user: {
+      type: String,
+      required: true
+    },
+    created: {
+      type: Date,
+      required: true,
+      default: Date.now()
+    }
+  }, {versionKey: false})
+
 topicSchema.pre('save', function(next) {
   var self = this
-  console.log('self.topic_id is ' + self.topic_id)
   if (this.isNew) {
     topicGenerate.increase('Topic', function(err, res) {
       if (err) {
         console.log('err is' + JSON.stringify(err))
       } else{
+        console.log('res is ' + JSON.stringify(res))
         self.topic_id = res.value.next
         next()
       }

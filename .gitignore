@@ -1,4 +1,4 @@
 node_modules
 static/node_modules
 test.js
-.npm-debug.log
+npm-debug.log

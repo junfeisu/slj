@@ -17,7 +17,6 @@
   @import '../../assets/style/mixin.scss';
   .background {
     @include fullscreen;
-    z-index: -999;
     background: url('../../assets/image/background.jpg');
     background-size: cover;
   }
@@ -26,6 +25,7 @@
     z-index: 1;
     width: 8.0rem;
     height: 5.0rem;
+    @include line-center;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
@@ -76,6 +76,7 @@
         })
           .then(data => {
             if (data.msg === '登录成功') {
+              window.localStorage.setItem('login_user', JSON.stringify(data.user))
               this.$router.go({name: 'index'})
             }
           })

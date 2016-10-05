@@ -19,7 +19,7 @@ export default function config (router) {
       component: login,
       docTitle: '登录'
     },
-    'topic': {
+    '/topic': {
       name: 'topic',
       component: topic,
       docTitle: '话题',
@@ -32,7 +32,7 @@ export default function config (router) {
           name: 'topicDetail',
           component: topicDetail
         },
-        'post:': {
+        '/post': {
           name: 'postTopic',
           component: postTopic
         }

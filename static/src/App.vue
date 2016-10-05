@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <slj-nav></slj-nav>
+    <slj-remind></slj-remind>
     <router-view></router-view>
   </div>
 </template>
@@ -9,6 +9,11 @@
   export default {
     data () {
       return {}
+    },
+    methods: {
+      add (data) {
+        this.$root.$children[0].addRemind(data)
+      }
     }
   }
 </script>
@@ -25,7 +30,8 @@
   #app {
     display: flex;
     justify-content: center;
-    align-items: center;
     height: 100%;
+    align-items: flex-start;
+    background: #eee;
   }
 </style>

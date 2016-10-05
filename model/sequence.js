@@ -27,10 +27,11 @@ CommentGenerateSchema = new Schema({
 })
 
 function increase (schemaName, callback) {
+   console.log('this is ' + this)
    return this.collection.findOneAndUpdate(
-      {_id: schemaName},
-      {$inc: {next: 1}}, 
-      {new: true, upsert: true}, 
+      {"_id": schemaName},
+      {$inc: {"next": 1}}, 
+      {upsert: true, returnNewDocument: true}, 
       callback
     )
 }

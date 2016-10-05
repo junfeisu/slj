@@ -1,4 +1,5 @@
 <template>
+  <slj-nav></slj-nav>
   <div class="index">index</div>
 </template>
 
