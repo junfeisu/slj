@@ -8,7 +8,7 @@
         </div>
         <div class="username">
           <div>{{topic.user.username}}</div>
-          <div>{{topic.created}}</div>
+          <div>{{topic.created | time_filter}}</div>
         </div>
       </div>
       <div class="topic-name">
@@ -16,8 +16,12 @@
       </div>
       <div class="topic-comment">
         <div class="comment-specifc" v-for="comment in topic.comments">
-          <span class="comment-user">{{comment.comment_user}}</span>
+          <span class="comment-user">{{comment.comment_user}}:</span>
           <div class="comment-content">{{comment.comment_content}}</div>
+        </div>
+        <div class="comment-post">
+          <input id="evaluate" type="text" placeholder="评论" @focus="showSend($event)" @blur="hideSend($event)" v-model="post.comment_content">
+          <slj-button type="plain" size="small" v-show="isActive" :topic-id="topic.topic_id" @click="send($event)">发送</slj-button>
         </div>
       </div>
     </div>
@@ -36,7 +40,7 @@
   }
 
   .specifc {
-    width: 10rem;
+    width: 9.533333rem;
     display: flex;
     padding: 0.2rem 0.233333rem;
     justify-content: flex-start;
@@ -64,6 +68,39 @@
     }
     .topic-name {
       width: 100%;
+      margin-top: 0.266667rem;
+    }
+    .comment-specifc {
+      display: flex;
+      flex-wrap: nowrap;
+      span {
+        color: #4285f4
+      }
+      .comment-content {
+        margin-left: 0.133333rem
+      }
+    }
+    .comment-post {
+      width: 9.533333rem;
+      display: flex;
+      flex-wrap: nowrap;
+      height: 0.4rem;
+      align-items: center;
+      justify-content: space-around;
+      margin-top: 0.4rem;
+      input {
+        border: 0px;
+        height: 0.4rem;
+        border: 1px solid #ccc;
+        padding: 0px 0.1rem;
+        font-size: 18px;
+      }
+      #evaluate {
+        width: 9.4rem;
+      }
+      #evaluate-active {
+        width: 8.033333rem;
+      }
     }
   }
 </style>
@@ -73,7 +110,15 @@
     name: 'topicList',
     data () {
       return {
-        topics: null
+        topics: null,
+        isActive: false,
+        post: {
+          comment_content: '',
+          comment_id: 1,
+          comment_user: JSON.parse(window.localStorage.getItem('login_user')).username,
+          comment_category: 1,
+          parent_id: null
+        }
       }
     },
     methods: {
@@ -85,6 +130,28 @@
           .catch(error => {
             console.log(error)
           })
+      },
+      hideSend (event) {
+        if (this.post.comment_content === '') {
+          this.isActive = false
+          event.target.id = 'evaluate'
+        }
+      },
+      send (event) {
+        this.post.parent_id = event.target.getAttribute('topic-id')
+        res.comment.post_comment(this.post)
+          .then(data => {
+            if (data.msg === '评论成功') {
+              this.$root.add({type: 'success', msg: data.msg})
+            }
+          })
+          .catch(error => {
+            this.$root.add({type: 'error', msg: JSON.stringify(error)})
+          })
+      },
+      showSend (event) {
+        this.isActive = true
+        event.target.id = 'evaluate-active'
       }
     },
     ready () {

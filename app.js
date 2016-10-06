@@ -6,7 +6,7 @@ var bodyParser = require('body-parser')
 var topic = require('./route/topic')
 var user = require('./route/user')
 var message = require('./route/message')
-var comment = require('./route/message')
+var comment = require('./route/comment')
 var doc = require('./route/meta')
 var cons = require('consolidate')
 

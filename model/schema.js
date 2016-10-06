@@ -21,7 +21,8 @@ var commentSchema = new Schema({
   },
   comment_date: {
     type: Date,
-    required: true
+    required: true,
+    default: Date.now()
   },
   comment_category: {
     type: Number,
