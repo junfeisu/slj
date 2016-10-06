@@ -15,12 +15,12 @@
         {{topic.topic_name}}
       </div>
       <div class="topic-comment">
-        <div class="comment-specifc" v-for="comment in topic.comments">
+        <div class="comment-specifc" v-for="comment in topic.comments" @click="autoFocus($event)" :name="comment.comment_user">
           <span class="comment-user">{{comment.comment_user}}:</span>
           <div class="comment-content">{{comment.comment_content}}</div>
         </div>
         <div class="comment-post">
-          <input id="evaluate" type="text" placeholder="评论" @focus="showSend($event)" @blur="hideSend($event)" v-model="post.comment_content">
+          <input id="evaluate" type="text" :placeholder="tip" @focus="showSend()" @blur="hideSend($event)" v-model="post.comment_content">
           <slj-button type="plain" size="small" v-show="isActive" :topic-id="topic.topic_id" @click="send($event)">发送</slj-button>
         </div>
       </div>
@@ -68,29 +68,35 @@
     }
     .topic-name {
       width: 100%;
-      margin-top: 0.266667rem;
+      padding: 0.266667rem 0rem;
+      border-bottom: 1px solid #ccc;
     }
     .comment-specifc {
       display: flex;
-      flex-wrap: nowrap;
-      span {
-        color: #4285f4
+      margin-top: 0.133333rem;
+      &:first-child {
+        margin-top: 0.4rem;
+      }
+      .comment-user {
+        color: #4285f4;
+        cursor: pointer;
       }
       .comment-content {
-        margin-left: 0.133333rem
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: 0.133333rem;
       }
     }
     .comment-post {
       width: 9.533333rem;
       display: flex;
       flex-wrap: nowrap;
-      height: 0.4rem;
       align-items: center;
       justify-content: space-around;
       margin-top: 0.4rem;
       input {
         border: 0px;
-        height: 0.4rem;
+        height: 0.6rem;
         border: 1px solid #ccc;
         padding: 0px 0.1rem;
         font-size: 18px;
@@ -101,6 +107,10 @@
       #evaluate-active {
         width: 8.033333rem;
       }
+      button {
+        font-size: 18px;
+        height: 0.6rem;
+      }
     }
   }
 </style>
@@ -110,7 +120,6 @@
     name: 'topicList',
     data () {
       return {
-        topics: null,
         isActive: false,
         post: {
           comment_content: '',
@@ -118,10 +127,21 @@
           comment_user: JSON.parse(window.localStorage.getItem('login_user')).username,
           comment_category: 1,
           parent_id: null
-        }
+        },
+        tip: '评论',
+        topics: null
       }
     },
     methods: {
+      autoFocus (event) {
+        let target = event.target
+        if (target.className === 'comment-specifc') {
+          this.tip = '回复' + target.getAttribute('name') + ':'
+        } else {
+          this.tip = '回复' + target.parentElement.getAttribute('name') + ':'
+        }
+        this.showSend()
+      },
       getList () {
         res.topic.get_alltopic()
           .then(data => {
@@ -149,9 +169,12 @@
             this.$root.add({type: 'error', msg: JSON.stringify(error)})
           })
       },
-      showSend (event) {
-        this.isActive = true
-        event.target.id = 'evaluate-active'
+      showSend () {
+        let evaluate = document.getElementById('evaluate')
+        if (evaluate !== null) {
+          this.isActive = true
+          evaluate.id = 'evaluate-active'
+        }
       }
     },
     ready () {
