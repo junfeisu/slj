@@ -20,8 +20,20 @@
           <div class="comment-content">{{comment.comment_content}}</div>
         </div>
         <div class="comment-post">
-          <input id="evaluate" type="text" :placeholder="tip" @focus="showSend()" @blur="hideSend($event)" v-model="post.comment_content">
-          <slj-button type="plain" size="small" v-show="isActive" :topic-id="topic.topic_id" @click="send($event)">发送</slj-button>
+          <input 
+            id="evaluate" 
+            type="text" 
+            :placeholder="tip" 
+            @focus="showSend()" 
+            @blur="hideSend($event)" 
+            v-model="post.comment_content"
+          >
+          <slj-button 
+            :type="isNull ? 'plain' : 'primary'" 
+            size="small" 
+            :topic-id="topic.topic_id" 
+            v-show="isActive" 
+            @click="send($event)">发送</slj-button>
         </div>
       </div>
     </div>
@@ -121,6 +133,7 @@
     data () {
       return {
         isActive: false,
+        isNull: true,
         post: {
           comment_content: '',
           comment_id: 1,
@@ -141,6 +154,9 @@
           this.tip = '回复' + target.parentElement.getAttribute('name') + ':'
         }
         this.showSend()
+      },
+      changeBtnStatus () {
+        this.post.comment_content === '' ? this.isNull = true : this.isNull = false
       },
       getList () {
         res.topic.get_alltopic()
@@ -176,6 +192,10 @@
           evaluate.id = 'evaluate-active'
         }
       }
+    },
+    watch: {
+      'post.comment_content': 'changeBtnStatus',
+      deep: true
     },
     ready () {
       this.getList()
