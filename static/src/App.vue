@@ -32,6 +32,7 @@
     justify-content: center;
     height: 100%;
     align-items: flex-start;
+    flex-wrap: wrap;
     background: #eee;
   }
 </style>

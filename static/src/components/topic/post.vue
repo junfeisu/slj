@@ -1,6 +1,6 @@
 <template>
   <div class="post">
-    <div class="cancel">取消</div>
+    <div class="cancel" @click="cancel()">取消</div>
     <div class="post-topic">
       <textarea name="topic" id="post-content" placeholder="发表点什么吧..."></textarea>
       <div class="preview">
@@ -90,18 +90,16 @@
         imgs: [],
         post: {
           topic_id: 1,
-          post_user: '',
+          post_user: JSON.parse(window.localStorage.getItem('login_user')).username,
           topic_name: '',
           illustrations: null
         }
-        // data: [{
-        //   topic_id: 1,
-        //   post_user: '乖宝宝',
-        //   topic_name: '地主要榨干工人的血汗，包括他的胳膊'
-        // }]
       }
     },
     methods: {
+      cancel () {
+        this.$router.go({name: 'topic'})
+      },
       publish () {
         let postContent = document.getElementById('post-content')
         this.post.topic_name = postContent.value
@@ -124,11 +122,9 @@
         reader.readAsDataURL(file)
         reader.onload = function (e) {
           self.imgs.push(e.target.result)
+          console.log(e.target.result)
         }
       }
-    },
-    ready () {
-      this.post.post_user = JSON.parse(window.localStorage.getItem('login_user')).username
     }
   }
 </script>

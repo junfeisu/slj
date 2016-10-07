@@ -7,6 +7,7 @@
       <li>留言册</li>
       <li>回忆相</li>
     </ul>
+    <div class="add" @click="toPost()"></div>
   </div>
 </template>
 
@@ -15,6 +16,12 @@
     name: 'nav',
     data () {
       return {}
+    },
+    methods: {
+      toPost () {
+        console.log('124')
+        this.$router.go({name: 'postTopic'})
+      }
     }
   }
 </script>
@@ -24,6 +31,8 @@
   .nav {
     display: flex;
     align-items: flex-end;
+    width: 10rem;
+    position: relative;
   }
   .bg {
     @include fullscreen;
@@ -53,5 +62,15 @@
     &:last-child {
       border-right: 0.0rem;
     }
+  }
+  .add {
+    position: absolute;
+    right: 0.4rem;
+    top: 0.266667rem;
+    width: 0.64rem;
+    height: 0.64rem;
+    background: url('./../assets/image/add.png');
+    background-size: cover;
+    z-index: 999;
   }
 </style>

@@ -138,7 +138,7 @@
         // 获取所有的topic
         res.topic.get_alltopic()
           .then(data => {
-            this.topics = data
+            this.topics = data.reverse()
             this.topics.forEach(() => {
               this.placeholder.push('评论')
             })
