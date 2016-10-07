@@ -1,7 +1,7 @@
 {
-  "name": "organization",
+  "name": "slj",
   "version": "1.0.0",
-  "description": "organization base on vue & es6 & express",
+  "description": "slj base on vue & es6 & express",
   "main": "main.js",
   "scripts": {
     "start": "node app"

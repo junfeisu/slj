@@ -17,6 +17,7 @@ route.get('/comment', function (req, res) {
 // 添加评论
 route.post('/comment', function (req, res) {
   mongo.add(new model['Comment'](req.body), function (err, result) {
+    console.log('result is' + JSON.stringify(result))
     err ? res.status(500).json(err) : res.json({msg: "评论成功", comment: result})
   })
 })

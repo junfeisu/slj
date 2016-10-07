@@ -65,6 +65,7 @@
   &-small {
     width: 1.066667rem;
     height: 0.373333rem;
+    font-size: 14px;
   }
 }
 </style>

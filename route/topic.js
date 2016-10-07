@@ -3,6 +3,8 @@ var route = express.Router()
 var relative = require('../model/relative')
 var mongo = require('../model/mongo').mongoUse
 var model = require('../model/schema').model
+// var app = require('../app')
+// var io = require('socket.io')(app)
 
 // 这是话题API
 route.get('/', function (req, res) {
@@ -11,6 +13,12 @@ route.get('/', function (req, res) {
 
 // 获取所有话题API
 route.get('/alltopic', function (req, res) {
+  // var io = require('socket.io')(app)
+  // io.on('connection', function (socket) {
+  //   socket.emit('alltopic', function () {
+  //     console.log('123')
+  //   })
+  // })
   mongo.search(model.Topic, {}, function (err, topic) {
     if (err) {
       res.json(err)
@@ -32,6 +40,7 @@ route.get('/topic', function (req, res) {
 
 // 添加话题API
 route.post('/topic', function (req, res) {
+  console.log('123')
   mongo.add(new model['Topic'](req.body), function (err, result) {
     err ? res.status(500).json(err) : res.json({msg: "添加话题成功", topic:result})
   })

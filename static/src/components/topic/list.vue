@@ -14,6 +14,9 @@
       <div class="topic-name">
         {{topic.topic_name}}
       </div>
+      <div class="illustration">
+        <img :src="illustration" alt="" v-for="illustration in topic.illustrations">
+      </div>
       <div class="topic-comment">
         <div class="comment-specifc" v-for="comment in topic.comments" @click="autoFocus($event)" :name="comment.comment_user">
           <span class="comment-user">{{comment.comment_user}}:</span>
@@ -31,8 +34,9 @@
           <slj-button 
             :type="isNull ? 'plain' : 'primary'" 
             size="small" 
-            :topic-id="topic.topic_id" 
-            v-show="isActive" 
+            :topic-id="topic.topic_id"
+            :index="$index" 
+            v-show="isActive[$index]" 
             @click="send($event)">发送</slj-button>
         </div>
       </div>
@@ -82,6 +86,16 @@
       width: 100%;
       padding: 0.266667rem 0rem;
       border-bottom: 1px solid #ccc;
+    }
+    .illustration {
+      margin: 0.133333rem 0.0rem;
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      img {
+        width: 2.0rem;
+        height: 2.0rem
+      }
     }
     .comment-specifc {
       display: flex;
@@ -148,10 +162,12 @@
     methods: {
       autoFocus (event) {
         let target = event.target
-        if (target.className === 'comment-specifc') {
+        let className = target.className
+        let parent = target.parentElement
+        if (className === 'comment-specifc') {
           this.tip = '回复' + target.getAttribute('name') + ':'
         } else {
-          this.tip = '回复' + target.parentElement.getAttribute('name') + ':'
+          this.tip = '回复' + parent.getAttribute('name') + ':'
         }
         this.showSend()
       },
@@ -159,6 +175,7 @@
         this.post.comment_content === '' ? this.isNull = true : this.isNull = false
       },
       getList () {
+        // 获取所有的topic
         res.topic.get_alltopic()
           .then(data => {
             this.topics = data
@@ -167,6 +184,7 @@
             console.log(error)
           })
       },
+      // 隐藏发送按钮
       hideSend (event) {
         if (this.post.comment_content === '') {
           this.isActive = false
@@ -174,11 +192,14 @@
         }
       },
       send (event) {
+        let index = event.target.getAttribute('index')
         this.post.parent_id = event.target.getAttribute('topic-id')
         res.comment.post_comment(this.post)
           .then(data => {
             if (data.msg === '评论成功') {
-              this.$root.add({type: 'success', msg: data.msg})
+              console.log(data)
+              console.log(this.topics[index].comments)
+              this.topics[index].comments.push(data.comment)
             }
           })
           .catch(error => {
@@ -194,6 +215,7 @@
       }
     },
     watch: {
+      // 监测评论框的内容
       'post.comment_content': 'changeBtnStatus',
       deep: true
     },

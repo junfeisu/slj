@@ -4,7 +4,6 @@ import login from 'components/login/login.vue'
 
 import topic from 'components/topic/topic.vue'
 import topicList from 'components/topic/list.vue'
-import topicDetail from 'components/topic/detail.vue'
 import postTopic from 'components/topic/post.vue'
 
 export default function config (router) {
@@ -27,10 +26,6 @@ export default function config (router) {
         '/': {
           name: 'topicList',
           component: topicList
-        },
-        '/detail': {
-          name: 'topicDetail',
-          component: topicDetail
         },
         '/post': {
           name: 'postTopic',

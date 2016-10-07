@@ -77,6 +77,7 @@ var topicSchema = new Schema({
       required: true
     },
     comments: [commentSchema],
+    illustrations: [String],
     user: userSchema,
     created: {
       type: Date,

@@ -1,6 +1,8 @@
 <template>
   <slj-nav></slj-nav>
-  <div class="index">index</div>
+  <div class="index">
+    
+  </div>
 </template>
 
 <script>
