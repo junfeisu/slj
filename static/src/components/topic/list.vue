@@ -120,6 +120,7 @@
       }
     },
     methods: {
+      // 当点击具体的评论时自动聚焦评论框，并且获取你想回复的用户名
       autoFocus (event) {
         let target = event.target
         let className = target.className
@@ -139,9 +140,6 @@
         res.topic.get_alltopic()
           .then(data => {
             this.topics = data.reverse()
-            this.topics.forEach(() => {
-              this.placeholder.push('评论')
-            })
           })
           .catch(error => {
             console.log(error)
@@ -149,8 +147,21 @@
       }
     },
     ready () {
+      let socket = window.io('http://127.0.0.1:3000')
+      let self = this
+      socket.on('connection', function () {
+        socket.emit('addme', function () {
+          console.log('addme')
+        })
+      })
+      socket.on('update', function (res) {
+        console.log('update')
+        if (res !== null || res !== []) {
+          console.log('123')
+        }
+        self.getList()
+      })
       this.getList()
-      console.log(this.$children)
     }
   }
 </script>

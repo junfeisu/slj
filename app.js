@@ -10,6 +10,9 @@ var comment = require('./route/comment')
 var doc = require('./route/meta')
 var cons = require('consolidate')
 var app = express()
+var mongoose = require('mongoose')
+var model = require('./model/schema').model
+var mongo = require('./model/mongo').mongoUse
 
 // app.all('*', function(req, res, next) {  
 //     res.header("Access-Control-Allow-Origin", "http://127.0.0.1:8080");  
@@ -57,8 +60,27 @@ app.use(function (err, req, res, next) {
   })
 })
 
-app.listen(3000, function () {
+var server = app.listen(3000, function () {
   console.log('Server start at 127.0.0.1:3000')
 })
+
+var io = require('socket.io')(server)
+
+io.on('connection', function (socket) {
+  socket.on('addme', function () {
+    console.log('addme')
+  })
+  socket.on('topic', function (comment) {
+    console.log('topic')
+    mongo.add(new model['Comment'](comment), function (err, res) {
+      if (err) {
+        console.log('socket err is' + err)
+      } else {
+        io.emit('update', res)
+      }
+    })
+  })
+})
+
 
 // module.exports = app

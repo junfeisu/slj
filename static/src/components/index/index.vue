@@ -2,7 +2,7 @@
   <slj-nav></slj-nav>
   <div class="index">
     <canvas id="cv" width="150" height="150"></canvas>
-  </div>
+  </div> 
 </template>
 
 <script>

@@ -20,7 +20,8 @@
     "jest-cli": "^0.6.1",
     "json-mock-kuitos": "^1.0.3",
     "mongoose": "^4.5.4",
-    "morgan": "^1.7.0"
+    "morgan": "^1.7.0",
+    "socket.io": "^1.5.0"
   },
   "dependencies": {
     "cheerio": "^0.20.0",

@@ -20,9 +20,12 @@
   input {
     border: 0px;
     height: 0.6rem;
-    border: 1px solid #ccc;
+    border: 0.5px solid #ccc;
     padding: 0px 0.1rem;
-    font-size: 18px;
+    font-size: 16px;
+    &:focus {
+      border-color: #07A7F1
+    }
   }
   .evaluate {
     width: 9.4rem;
@@ -31,7 +34,6 @@
     width: 8.033333rem;
   }
   .slj-btn-small {
-    font-size: 18px;
     height: 0.6rem;
   }
 </style>
@@ -71,19 +73,22 @@
         }
       },
       send (event) {
-        let index = event.target.getAttribute('index')
-        console.log(index)
+        let io = window.io('http://127.0.0.1:3000')
+        // console.log(index)
         this.post.parent_id = event.target.getAttribute('topic-id')
-        res.comment.post_comment(this.post)
-          .then(data => {
-            if (data.msg === '评论成功') {
-              this.$parent.topics[index].comments.push(data.comment)
-              this.post.comment_content = ''
-            }
-          })
-          .catch(error => {
-            this.$root.add({type: 'error', msg: JSON.stringify(error)})
-          })
+        // res.comment.post_comment(this.post)
+        //   .then(data => {
+        //     if (data.msg === '评论成功') {
+        //       this.$parent.topics[index].comments.push(data.comment)
+        //       this.post.comment_content = ''
+        //     }
+        //   })
+        //   .catch(error => {
+        //     this.$root.add({type: 'error', msg: JSON.stringify(error)})
+        //   })
+        let comment = this.post
+        io.emit('topic', comment)
+        // let index = event.target.getAttribute('index')
       },
       showSend () {
         this.isActive = true

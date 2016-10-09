@@ -8,6 +8,7 @@
       <li>回忆相</li>
     </ul>
     <div class="add" @click="toPost()"></div>
+    <img class="user" :src="userIcon" alt="">
   </div>
 </template>
 
@@ -15,7 +16,9 @@
   export default {
     name: 'nav',
     data () {
-      return {}
+      return {
+        userIcon: JSON.parse(window.localStorage.getItem('login_user')).photo
+      }
     },
     methods: {
       toPost () {
@@ -72,5 +75,13 @@
     background: url('./../assets/image/add.png');
     background-size: cover;
     z-index: 999;
+  }
+  .user {
+    width: 0.96rem;
+    height: 0.96rem;
+    border-radius: 0.48rem;
+    position: absolute;
+    left: 0.266667rem;
+    bottom: 1.266667rem;
   }
 </style>
