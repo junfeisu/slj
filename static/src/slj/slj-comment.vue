@@ -74,21 +74,16 @@
       },
       send (event) {
         let io = window.io('http://127.0.0.1:3000')
-        // console.log(index)
-        this.post.parent_id = event.target.getAttribute('topic-id')
-        // res.comment.post_comment(this.post)
-        //   .then(data => {
-        //     if (data.msg === '评论成功') {
-        //       this.$parent.topics[index].comments.push(data.comment)
-        //       this.post.comment_content = ''
-        //     }
-        //   })
-        //   .catch(error => {
-        //     this.$root.add({type: 'error', msg: JSON.stringify(error)})
-        //   })
+        let index = event.target.getAttribute('index')
         let comment = this.post
-        io.emit('topic', comment)
-        // let index = event.target.getAttribute('index')
+        this.post.parent_id = event.target.getAttribute('topic-id')
+        io.emit('comment', comment)
+        io.on('comment_update', function (res) {
+          this.$parent.topics[index].comments.push(res.comment)
+        })
+        io.on('comment_error', function (err) {
+          this.$root.add({msg: JSON.stringify(err), type: 'error'})
+        })
       },
       showSend () {
         this.isActive = true

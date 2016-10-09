@@ -147,20 +147,6 @@
       }
     },
     ready () {
-      let socket = window.io('http://127.0.0.1:3000')
-      let self = this
-      socket.on('connection', function () {
-        socket.emit('addme', function () {
-          console.log('addme')
-        })
-      })
-      socket.on('update', function (res) {
-        console.log('update')
-        if (res !== null || res !== []) {
-          console.log('123')
-        }
-        self.getList()
-      })
       this.getList()
     }
   }

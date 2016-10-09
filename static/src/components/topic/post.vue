@@ -101,19 +101,19 @@
         this.$router.go({name: 'topic'})
       },
       publish () {
+        let io = window.io('http://127.0.0.1:3000')
         let postContent = document.getElementById('post-content')
+        let topic = this.post
         this.post.topic_name = postContent.value
         this.post.illustrations = this.imgs
-        res.topic.post_topic(this.post)
-          .then(data => {
-            if (data.msg === '添加话题成功') {
-              this.$root.add({type: 'success', msg: '发表成功'})
-              this.$router.go({name: 'topicList'})
-            }
-          })
-          .catch(error => {
-            this.$root.add({type: 'error', msg: JSON.stringify(error)})
-          })
+        io.on('topic', topic)
+        io.on('topic_error', function (err) {
+          this.$root.add({type: 'error', msg: JSON.stringify(err)})
+        })
+        io.on('topic_update', function (res) {
+          this.$root.add({type: 'success', msg: '发表成功'})
+          this.$router.go({name: 'topicList'})
+        })
       },
       readFile (event) {
         var self = this

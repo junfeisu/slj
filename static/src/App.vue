@@ -14,6 +14,14 @@
       add (data) {
         this.$root.$children[0].addRemind(data)
       }
+    },
+    ready () {
+      let socket = window.io('http://127.0.0.1:3000')
+      socket.on('connection', function () {
+        socket.emit('addme', function () {
+          console.log('addme')
+        })
+      })
     }
   }
 </script>

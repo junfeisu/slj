@@ -64,23 +64,27 @@ var server = app.listen(3000, function () {
   console.log('Server start at 127.0.0.1:3000')
 })
 
+/*
+ *下面是用socket实现的服务端与客户端信息同步
+ *第一个‘addme’是说明客户端与服务端的连接已经建立
+ *第二个‘comment’是当客户端发表评论时将评论存进mongodb，不管成功都向客户端广播一个处理事件('error' 和 'update')
+ */
 var io = require('socket.io')(server)
 
 io.on('connection', function (socket) {
   socket.on('addme', function () {
     console.log('addme')
   })
-  socket.on('topic', function (comment) {
-    console.log('topic')
+  socket.on('comment', function (comment) {
+    console.log('comment')
     mongo.add(new model['Comment'](comment), function (err, res) {
-      if (err) {
-        console.log('socket err is' + err)
-      } else {
-        io.emit('update', res)
-      }
+      err ? io.emit('comment_error', err) : io.emit('comment_update', res)
+    })
+  })
+  socket.on('topic', function (topic) {
+    console.log('topic')
+    mongo.add(new model['Topic'](topic), function (err, res) {
+      err ? io.emit('topic_error', err) : io.emit('topic_update', res)
     })
   })
 })
-
-
-// module.exports = app
