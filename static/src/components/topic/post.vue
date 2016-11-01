@@ -101,7 +101,7 @@
         this.$router.go({name: 'topic'})
       },
       publish () {
-        let io = window.io('http://127.0.0.1:3000')
+        let io = window.io('http://127.0.0.1:8000')
         let postContent = document.getElementById('post-content')
         let self = this
         let topic = self.post
