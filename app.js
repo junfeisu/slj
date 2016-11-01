@@ -60,8 +60,8 @@ app.use(function (err, req, res, next) {
   })
 })
 
-var server = app.listen(3000, function () {
-  console.log('Server start at 127.0.0.1:3000')
+var server = app.listen(8000, function () {
+  console.log('Server start at 127.0.0.1:8000')
 })
 
 /*
