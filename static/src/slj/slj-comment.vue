@@ -73,14 +73,15 @@
         }
       },
       send (event) {
-        let io = window.io('http://127.0.0.1:3000')
+        let io = window.io('http://127.0.0.1:8000')
         let index = event.target.getAttribute('index')
         let comment = this.post
         let self = this
         this.post.parent_id = event.target.getAttribute('topic-id')
         io.emit('comment', comment)
         io.on('comment_update', function (res) {
-          self.$parent.topics[index].comments.push(res.comment)
+          console.log(res)
+          self.$parent.topics[index].comments.push(res)
         })
         io.on('comment_error', function (err) {
           self.$root.add({msg: JSON.stringify(err), type: 'error'})

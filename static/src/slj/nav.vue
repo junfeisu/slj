@@ -17,14 +17,18 @@
     name: 'nav',
     data () {
       return {
-        userIcon: JSON.parse(window.localStorage.getItem('login_user')).photo
+        userIcon: ''
       }
     },
     methods: {
       toPost () {
-        console.log('124')
-        this.$router.go({name: 'postTopic'})
+        this.$route.router.go({name: 'postTopic'})
       }
+    },
+    ready () {
+      let user = JSON.parse(window.localStorage.getItem('login_user'))
+      console.log(user)
+      user === null ? this.$router.go({name: 'login'}) : this.userIcon = user.photo
     }
   }
 </script>
