@@ -1,7 +1,8 @@
 <template>
   <slj-nav></slj-nav>
   <div class="index">
-    <canvas id="cv" width="150" height="150"></canvas>
+    <!-- <canvas id="cv" width="150" height="150"></canvas> -->
+    <span class="welcome">欢迎晶宝宝来到只属于她和某个傻瓜的个人空间</span>
   </div> 
 </template>
 

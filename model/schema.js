@@ -47,7 +47,7 @@ var userSchema = new Schema({
     photo: {
       type: String,
       required: true,
-      default: 'http://7xrp7o.com1.z0.glb.clouddn.com/IMG_20160928_142420.jpg'
+      default: 'http://7xrp7o.com1.z0.glb.clouddn.com/sujunfei.jpg'
     },
     user_id: {
       type: Number,

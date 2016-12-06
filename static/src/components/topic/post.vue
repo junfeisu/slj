@@ -89,7 +89,7 @@
       return {
         imgs: [],
         post: {
-          topic_id: 1,
+          topic_id: 0,
           post_user: JSON.parse(window.localStorage.getItem('login_user')).username,
           topic_name: '',
           illustrations: null
@@ -101,6 +101,7 @@
         this.$router.go({name: 'topic'})
       },
       publish () {
+        let self = this
         let io = window.io('http://127.0.0.1:8000')
         let postContent = document.getElementById('post-content')
         let topic = this.post
@@ -108,12 +109,12 @@
         this.post.illustrations = this.imgs
         io.emit('topic', topic)
         io.on('topic_error', function (err) {
-          console.log(JSON.stringify(err))
-          this.$root.add({type: 'error', msg: JSON.stringify(err)})
+          console.log(err)
+          self.$root.add({type: 'error', msg: JSON.stringify(err)})
         })
         io.on('topic_update', function (res) {
-          this.$root.add({type: 'success', msg: '发表成功'})
-          this.$router.go({name: 'topicList'})
+          self.$root.add({type: 'success', msg: '发表成功'})
+          self.$router.go({name: 'topicList'})
         })
       },
       readFile (event) {

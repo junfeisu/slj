@@ -7,9 +7,6 @@
 
 <script>
   export default {
-    data () {
-      return {}
-    },
     methods: {
       add (data) {
         this.$root.$children[0].addRemind(data)

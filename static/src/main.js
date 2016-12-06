@@ -11,8 +11,7 @@ Vue.use(filter)
 Vue.use(sljComponent)
 
 const router = new VueRouter({
-  saveScrollPosition: true,
-  history: true
+  saveScrollPosition: true
 })
 
 window.res = res

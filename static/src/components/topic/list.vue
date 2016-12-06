@@ -76,11 +76,11 @@
     .illustration {
       margin: 0.133333rem 0.0rem;
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-around;
       flex-wrap: wrap;
       img {
-        width: 2.0rem;
-        height: 2.0rem
+        width: 3rem;
+        height: 3rem;
       }
     }
     .comment-specifc {

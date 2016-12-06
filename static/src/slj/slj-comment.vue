@@ -66,6 +66,7 @@
       }
     },
     methods: {
+      // 是否显示发送按钮
       hideSend (event) {
         if (this.post.comment_content === '') {
           this.isActive = false
@@ -80,8 +81,8 @@
         this.post.parent_id = event.target.getAttribute('topic-id')
         io.emit('comment', comment)
         io.on('comment_update', function (res) {
-          console.log(res)
           self.$parent.topics[index].comments.push(res)
+          self.post.comment_content = ''
         })
         io.on('comment_error', function (err) {
           self.$root.add({msg: JSON.stringify(err), type: 'error'})
