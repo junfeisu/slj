@@ -8,12 +8,13 @@
     v-model="post.comment_content"
   >
   <slj-button 
-    :type="post.comment_content === '' ? 'plain' : 'primary'" 
+    :type="post.comment_content ? 'primary' : 'plain'" 
     size="small" 
     :topic-id="topic"
     :index="order" 
     v-show="isActive" 
-    @click="send($event)">发送</slj-button>
+    @click="send($event)"
+  >发送</slj-button>
 </template>
 
 <style lang="scss">
@@ -62,16 +63,20 @@
           comment_user: JSON.parse(window.localStorage.getItem('login_user')).username,
           comment_category: 1,
           parent_id: null
-        }
+        },
+        storageMes: ''
       }
     },
     methods: {
       // 是否显示发送按钮
       hideSend (event) {
-        if (this.post.comment_content === '') {
-          this.isActive = false
-          event.target.id = 'evaluate'
+        this.isActive = false
+        this.tip = '评论'
+        event.target.id = 'evaluate'
+        if (this.post.comment_content !== '') {
+          this.storageMes = this.post.comment_content
         }
+        this.post.comment_content = ''
       },
       send (event) {
         let io = window.io('http://127.0.0.1:8000')
@@ -83,6 +88,7 @@
         io.on('comment_update', function (res) {
           self.$parent.topics[index].comments.push(res)
           self.post.comment_content = ''
+          self.storageMes = ''
         })
         io.on('comment_error', function (err) {
           self.$root.add({msg: JSON.stringify(err), type: 'error'})
@@ -90,6 +96,18 @@
       },
       showSend () {
         this.isActive = true
+        this.post.comment_content = this.storageMes
+      },
+      keepStorageMes () {
+        if (this.isActive) {
+          this.storageMes = this.post.comment_content
+        }
+      }
+    },
+    watch: {
+      'post.comment_content': {
+        handler: 'keepStorageMes',
+        deep: true
       }
     }
   }

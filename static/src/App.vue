@@ -6,6 +6,7 @@
 </template>
 
 <script>
+  import './assets/js/flex.js'
   export default {
     methods: {
       add (data) {

@@ -1,11 +1,5 @@
 import index from 'components/index/index.vue'
 
-import login from 'components/login/login.vue'
-
-import topic from 'components/topic/topic.vue'
-import topicList from 'components/topic/list.vue'
-import postTopic from 'components/topic/post.vue'
-
 export default function config (router) {
   router.map({
     '/': {
@@ -15,21 +9,37 @@ export default function config (router) {
     },
     '/login': {
       name: 'login',
-      component: login,
+      component: resolve => {
+        require.ensure(['./components/login/login.vue'], () => {
+          resolve(require('./components/login/login.vue'))
+        })
+      },
       docTitle: '登录'
     },
     '/topic': {
       name: 'topic',
-      component: topic,
+      component: resolve => {
+        require.ensure(['./components/topic/topic.vue'], () => {
+          resolve(require('./components/topic/topic.vue'))
+        })
+      },
       docTitle: '话题',
       subRoutes: {
         '/': {
           name: 'topicList',
-          component: topicList
+          component: resolve => {
+            require.ensure(['./components/topic/list.vue'], () => {
+              resolve(require('./components/topic/list.vue'))
+            })
+          }
         },
         '/post': {
           name: 'postTopic',
-          component: postTopic
+          component: resolve => {
+            require.ensure(['./components/topic/post.vue'], () => {
+              resolve(require('./components/topic/post.vue'))
+            })
+          }
         }
       }
     }
