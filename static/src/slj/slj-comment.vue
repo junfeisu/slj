@@ -85,6 +85,7 @@
         let self = this
         this.post.parent_id = event.target.getAttribute('topic-id')
         io.emit('comment', comment)
+        // 评论成功之后刷新列表,清空缓存信息和内容
         io.on('comment_update', function (res) {
           self.$parent.topics[index].comments.push(res)
           self.post.comment_content = ''
@@ -94,10 +95,12 @@
           self.$root.add({msg: JSON.stringify(err), type: 'error'})
         })
       },
+      // 显示发送按钮
       showSend () {
         this.isActive = true
         this.post.comment_content = this.storageMes
       },
+      // 在输入框激活的状态下保持缓存信息和输入框内容一致
       keepStorageMes () {
         if (this.isActive) {
           this.storageMes = this.post.comment_content

@@ -1,5 +1,6 @@
 <template>
   <slj-nav></slj-nav>
+  <slj-image-modal></slj-image-modal>
   <div class="list">
     <div class="specifc" v-for="topic in topics">
       <div class="user-message">
@@ -14,8 +15,10 @@
       <div class="topic-name">
         {{topic.topic_name}}
       </div>
-      <div class="illustration">
-        <img :src="illustration" v-for="illustration in topic.illustrations">
+      <div class="illustration" @click="showModal($event)">
+        <img 
+          :src="illustration" 
+          v-for="illustration in topic.illustrations">
       </div>
       <div class="topic-comment" :topic-id="topic.topic_id">
         <div :index="$parent.$index" class="comment-specifc" v-for="comment in topic.comments" @click="autoFocus($event)" :name="comment.comment_user">
@@ -127,7 +130,7 @@
         let parent = target.parentElement
         let commentTarget = className === 'comment-specifc' ? target : parent
         let index = +commentTarget.getAttribute('index')
-        let childrenComment = this.$children[index + 1]
+        let childrenComment = this.$children[index + 2]
         childrenComment.tip = '回复' + commentTarget.getAttribute('name')
         commentTarget.parentElement.querySelector('input').focus()
       },
@@ -140,6 +143,15 @@
           .catch(error => {
             console.log(error)
           })
+      },
+      showModal (event) {
+        let target = event.target
+        console.log(this.$children[1])
+        if (target.nodeName === 'IMG') {
+          console.log('123')
+          this.$children[1].isModal = true
+          this.$children[1].imageSrc = target.getAttribute('src')
+        }
       }
     },
     ready () {

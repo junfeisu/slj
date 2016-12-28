@@ -33,7 +33,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import './../assets/style/mixin.scss';
   .nav {
     display: flex;
@@ -78,7 +78,7 @@
     height: 0.64rem;
     background: url('./../assets/image/add.png');
     background-size: cover;
-    z-index: 999;
+    z-index: 555;
   }
   .user {
     width: 0.96rem;
