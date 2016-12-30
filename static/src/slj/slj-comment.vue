@@ -79,7 +79,7 @@
         this.post.comment_content = ''
       },
       send (event) {
-        let io = window.io('http://127.0.0.1:8000')
+        let io = window.io('http://localhost:8000')
         let index = event.target.getAttribute('index')
         let comment = this.post
         let self = this

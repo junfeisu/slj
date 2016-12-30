@@ -102,7 +102,7 @@
       },
       publish () {
         let self = this
-        let io = window.io('http://127.0.0.1:8000')
+        let io = window.io('http://localhost:8000')
         let postContent = document.getElementById('post-content')
         let topic = this.post
         this.post.topic_name = postContent.value
