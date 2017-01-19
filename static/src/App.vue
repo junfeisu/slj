@@ -14,7 +14,7 @@
       }
     },
     ready () {
-      let socket = window.io('http://localhost:8000')
+      let socket = window.io('http://127.0.0.1:8000')
       socket.on('connection', function () {
         socket.emit('addme', function () {
           console.log('addme')

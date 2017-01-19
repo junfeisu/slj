@@ -4,7 +4,7 @@
     type="text" 
     :placeholder="tip" 
     @focus="showSend()" 
-    @blur="hideSend($event)" 
+    @blur="hideSend($event)"
     v-model="post.comment_content"
   >
   <slj-button 
@@ -60,7 +60,7 @@
         post: {
           comment_content: '',
           comment_id: 1,
-          comment_user: JSON.parse(window.localStorage.getItem('login_user')).username,
+          comment_user: '',
           comment_category: 1,
           parent_id: null
         },
@@ -70,30 +70,46 @@
     methods: {
       // 是否显示发送按钮
       hideSend (event) {
+        let self = this
+        let sljBtnPrimary = document.querySelector('.slj-btn-primary')
+        if (sljBtnPrimary) {
+          sljBtnPrimary.onclick = function (event) {
+            self.send(event)
+          }
+          self.initState()
+        } else {
+          self.initState()
+        }
+      },
+      initState () {
         this.isActive = false
         this.tip = '评论'
-        event.target.id = 'evaluate'
         if (this.post.comment_content !== '') {
           this.storageMes = this.post.comment_content
         }
         this.post.comment_content = ''
       },
       send (event) {
-        let io = window.io('http://localhost:8000')
-        let index = event.target.getAttribute('index')
-        let comment = this.post
-        let self = this
-        this.post.parent_id = event.target.getAttribute('topic-id')
-        io.emit('comment', comment)
-        // 评论成功之后刷新列表,清空缓存信息和内容
-        io.on('comment_update', function (res) {
-          self.$parent.topics[index].comments.push(res)
-          self.post.comment_content = ''
-          self.storageMes = ''
-        })
-        io.on('comment_error', function (err) {
-          self.$root.add({msg: JSON.stringify(err), type: 'error'})
-        })
+        if (this.post.comment_content) {
+          console.log('send')
+          let self = this
+          let io = window.io('http://127.0.0.1:8000')
+          let index = event.target.getAttribute('index')
+          let comment = self.post
+          self.post.parent_id = event.target.getAttribute('topic-id')
+          io.emit('comment', comment)
+          // 评论成功之后刷新列表,清空缓存信息和内容
+          io.on('comment_update', function (res) {
+            console.log('update')
+            self.$parent.topics[index].comments.push(res)
+            self.post.comment_content = ''
+            self.storageMes = ''
+          })
+          io.on('comment_error', function (err) {
+            console.log('error')
+            self.$root.add({msg: JSON.stringify(err), type: 'error'})
+          })
+        }
       },
       // 显示发送按钮
       showSend () {
@@ -112,6 +128,10 @@
         handler: 'keepStorageMes',
         deep: true
       }
+    },
+    ready () {
+      let loginUser = window.localStorage.getItem('login_user')
+      this.post.comment_user = loginUser ? loginUser.username : this.$router.go({name: 'login'})
     }
   }
 </script>

@@ -28,7 +28,7 @@
     ready () {
       let user = JSON.parse(window.localStorage.getItem('login_user'))
       console.log(user)
-      user === null ? this.$router.go({name: 'login'}) : this.userIcon = user.photo
+      user ? this.userIcon = user.photo : this.$router.go({name: 'login'})
     }
   }
 </script>
