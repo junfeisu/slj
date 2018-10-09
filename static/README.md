@@ -1,7 +1,3 @@
-# organization
-
-> the community platform of whole organization in Nanchang university
-
 ## Build Setup
 
 ``` bash
